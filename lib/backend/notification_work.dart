@@ -30,23 +30,32 @@ class NotificationWork {
         ?.createNotificationChannel(channel);
   }
 
-  static Future<void> fetchBridgeDataAndNotify(inputData) async {
+  static Future<void> fetchBridgeDataAndNotify() async {
     try {
       final bridgeData = await BridgeDataProvider().fetchBridgeData();
 
-      var notificationId = inputData[notificationTaskName];
-      var bridgeSelectionData = await DatabaseHelper.fetchNotificationsByNotificationId(notificationId);
       var message = "";
 
-      bridgeData.values.first.forEach((data) {
-        if (bridgeSelectionData.any((bridge) => bridge.bridge == data.title))
-          return;
+      for (var data in bridgeData.values.first) {
+        if(data.title == null) continue;
+        var bridge = await DatabaseHelper.fetchBridgeByName(data.title ?? '');
+        if(bridge.isEmpty) {
+          await DatabaseHelper.createBridge(BridgeInfo(name: data.title ?? '', color: data.color));
+          if(data.color == BridgeColor.green) continue;
+          message += "Bridge ${data.title?? ''} ${data.description}\n";
+        }
+        else{
+          if(bridge.first.color == data.color) continue;
 
-        message += "${data.title}: ${data.description}";
-      });
+          if(bridge.first.color != data.color){
+            await DatabaseHelper.updateBridgeColor(bridge.first.id, data.color);
+            message += "Bridge ${data.title?? ''} ${data.description}\n";
+          }
+        }
+      }
 
-      String notificationTitle = "Bridge Update";
-      String notificationBody = message;
+      var notificationTitle = "Bridge Update";
+      var notificationBody = message;
 
       await _sendNotification(notificationTitle, notificationBody);
     } catch (e) {

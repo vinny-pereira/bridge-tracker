@@ -91,6 +91,8 @@ class _SettingsPageState extends State<SettingsPage> {
       iOS: initializationSettingsIOS,
     );
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
   }
 
   Future<void> fetchBridgeDataAndPopulate() async {

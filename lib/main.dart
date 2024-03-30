@@ -8,7 +8,8 @@ void callbackDispatcher(){
   Workmanager().executeTask((task, inputData) async {
     print("Native called background task: $task");
     try{
-      await NotificationWork.fetchBridgeDataAndNotify(inputData);
+      if(task == NotificationWork.notificationTaskName)
+        await NotificationWork.fetchBridgeDataAndNotify();
       return Future.value(true);
     }catch(e){
       return Future.value(false);
@@ -21,6 +22,14 @@ void main() {
   Workmanager().initialize(callbackDispatcher);
   NotificationWork.initNotifications();
   runApp(const MyApp());
+  Workmanager().registerOneOffTask(
+    "2",
+    NotificationWork.notificationTaskName,
+  );
+  Workmanager().registerPeriodicTask(
+    "1",
+    NotificationWork.notificationTaskName,
+  );
 }
 
 class MyApp extends StatelessWidget {
