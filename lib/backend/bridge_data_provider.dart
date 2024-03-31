@@ -54,6 +54,19 @@ class BridgeData{
   final String? description;
   final BridgeColor color;
 
+  static BridgeColor toBridgeColor(String color){
+    switch (color) {
+      case 'BridgeColor.green':
+        return BridgeColor.green;
+      case 'BridgeColor.amber':
+        return BridgeColor.amber;
+      case 'BridgeColor.red':
+        return BridgeColor.red;
+      default:
+        throw ArgumentError('Unknown status value: $color');
+    }
+  }
+
   BridgeData({
     required this.title,
     required this.description,

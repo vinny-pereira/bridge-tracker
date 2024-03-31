@@ -111,7 +111,7 @@ CREATE TABLE bridges (
       return BridgeInfo(
         id: maps[i]['id'],
         name: maps[i]['name'],
-        color: maps[i]['color'],
+        color: BridgeData.toBridgeColor(maps[i]['color']),
       );
     });
   }

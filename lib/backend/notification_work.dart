@@ -12,9 +12,16 @@ class NotificationWork {
 
   static Future<void> initNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+    const DarwinInitializationSettings initializationSettingsIOS =
+    DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true
+    );
 
     const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
     );
     await _notificationsPlugin.initialize(initializationSettings);
 
@@ -72,7 +79,11 @@ class NotificationWork {
       priority: Priority.high,
       ticker: 'ticker',
     );
-    final NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+    const iOSPlatformChannelSpecifics = DarwinNotificationDetails(
+      sound: 'default',
+    );
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
     await _notificationsPlugin.show(
       0,
       title,

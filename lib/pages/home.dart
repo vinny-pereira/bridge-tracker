@@ -1,11 +1,6 @@
 import 'dart:async';
-
-import 'package:bridge_tracker/pages/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:workmanager/workmanager.dart';
-
 import '../backend/bridge_data_provider.dart';
-import '../backend/notification_work.dart';
 
 class HomePage extends StatefulWidget {
   @override
